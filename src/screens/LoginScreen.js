@@ -1,16 +1,18 @@
 import React, {useState} from 'react';
-import {View, TextInput, Button, Text} from 'react-native'
+import {View, TextInput, Button, Text} from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const auth = getAuth();
 
   const handleLoginPress = () => {
-
-  }
-
-  const navigateRegister = () => {
-    navigation.navigate('SignUp')
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+    })
+    .catch((err) => console.error(err));
   }
 
   return (
@@ -37,7 +39,7 @@ const LoginScreen = ({navigation}) => {
       />
       <Button
         title="Not registered? Register Here"
-        onPress={navigateRegister}
+        onPress={() => navigation.navigate('SignUp')}
       />
     </View>
   )
