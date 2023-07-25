@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import Swiper from "react-native-deck-swiper";
 import Card from './Card';
+import { Text } from 'react-native'
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 const Swipe = () => {
   const [destinations, setDestinations] = useState([]);
+  const [loading, setLoading] = useState(true);
   const db = getFirestore();
 
   const getAllDestinations = async () => {
@@ -33,12 +35,15 @@ const Swipe = () => {
       .then((destinationsData) => {
         console.log(destinationsData);
         setDestinations(destinationsData);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
   return (
+    <>
+    {!loading ?
     <Swiper
             cards={destinations}
             renderCard={(card) => <Card destination={card}/>}
@@ -47,7 +52,10 @@ const Swipe = () => {
             cardIndex={0}
             backgroundColor={'#1b263b'}
             stackSize= {3}
-      />
+            verticalSwipe={false}
+            stackSeparation={20}
+      /> : <Text>Cards are loading...</Text>}
+      </>
   )
 };
 
