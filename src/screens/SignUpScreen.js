@@ -35,7 +35,7 @@ const SignUpScreen = ({ navigation }) => {
         iata: values.iata,
       };
 
-      const db = getFirestore(firebaseApp);
+      const db = getFirestore();
       const docRef = await addDoc(collection(db, "users"), userData);
       console.log("User data added to Firestore with ID: ", docRef.id);
     } catch (error) {
@@ -74,7 +74,7 @@ const SignUpScreen = ({ navigation }) => {
       <TextInput
         placeholder="SFO"
         placeholderTextColor="#aaaaaa"
-        onChangeText={(iata) => handleChange('iata', text)}
+        onChangeText={(text) => handleChange('iata', text)}
         value={values.iata}
         className={inputStyle}
       />

@@ -1,15 +1,16 @@
 import React from 'react';
-import {View, Text} from 'react-native'
+import {View, Text, Image} from 'react-native'
 
-const Card = (destination) => {
+const Card = ({destination}) => {
 return (
   <View>
-    <Text>Paris</Text>
-    {/* image or video URL
-    best time to visit
-    average flight duration / cost from your home airport
-    visa or entry requirements
-    */}
+    <Text className="text-slate-50 font-bold text-xl justify-center">{destination.name}</Text>
+    <Image
+            style={{ width: "100%", height: 500, borderRadius: 10 }}
+            source={{
+              uri: destination.image
+            }}
+    />
   </View>
 )
 }
