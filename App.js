@@ -8,18 +8,15 @@ import SignUpScreen from './src/screens/SignUpScreen';
 import * as firebaseConfig from './firebaseConfig';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
   const auth = getAuth();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false);
     });
   }, [auth]);
 

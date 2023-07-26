@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc } from "firebase/firestore";
 
 const SignUpScreen = ({ navigation }) => {
   const [values, setValues] = useState({
-    uid: '',
     password: '',
     first: '',
     last: '',
@@ -24,20 +23,22 @@ const SignUpScreen = ({ navigation }) => {
       const auth = getAuth();
 
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-
       const user = userCredential.user;
       console.log("User account created with ID: ", user.uid);
+
       const userData = {
-        uid: user.uid,
         first: values.first,
         last: values.last,
         email: values.email,
         iata: values.iata,
+        uid: user.uid
       };
 
       const db = getFirestore();
-      const docRef = await addDoc(collection(db, "users"), userData);
-      console.log("User data added to Firestore with ID: ", docRef.id);
+      const userRef = doc(db, "users", user.uid); // Use the user UID as the document ID
+      await setDoc(userRef, userData);
+
+      console.log("User data added to Firestore with ID: ", user.uid);
     } catch (error) {
       console.error("Error creating user account: ", error);
     }

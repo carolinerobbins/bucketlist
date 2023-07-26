@@ -1,13 +1,15 @@
-import {  Text, SafeAreaView, Button } from "react-native";
+import {  Text, View, StatusBar } from "react-native";
 import Swipe from '../features/Swiper'
 
 const HomeScreen = ({navigation}) => {
 
   return (
-    <SafeAreaView className="flex-1 justify-center items-center dark:bg-slate-800">
-      <Text className="text-2xl dark:text-white"> BucketList </Text>
+    <>
+    <StatusBar backgroundColor="#1b263b" barStyle="light-content" />
+    <View className="flex-1 items-center dark:bg-slate-800">
       <Swipe />
-    </SafeAreaView>
+    </View>
+    </>
   );
 };
 export default HomeScreen;

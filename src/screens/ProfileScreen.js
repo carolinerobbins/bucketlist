@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Switch, Text, View, Button } from "react-native";
+import { SafeAreaView, Switch, Text, View, Button } from "react-native";
 import { useColorScheme } from "nativewind";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -14,12 +14,13 @@ const ProfileScreen = ({ navigation }) => {
 });
   }
   return (
-    <View className="flex-1 justify-center items-center dark:bg-slate-800">
+    <SafeAreaView className="flex-1 items-center dark:bg-slate-800">
+      <Text className="text-lg dark:text-slate-50">Toggle Dark Mode: </Text>
       <Switch value={colorScheme === "dark"} onChange={toggleColorScheme} />
-      <Text className="text-2xl dark:text-white"> This is your profile screen. </Text>
+      <Text className="text-lg dark:text-slate-50"> This is your profile screen. </Text>
       <Button title='Sign Out' onPress={() => handleSignOut()} />
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-    </View>
+    </SafeAreaView>
   );
 };
 export default ProfileScreen;
