@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react'
 import { ScrollView, Text, View, SafeAreaView } from "react-native";
 import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import ListCard from '../features/ListCard';
+import {getNonStop} from '../apis/flights';
 
 const ListScreen = () => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [nonstop, setNonstop] = useState([]);
 
   const getAdded = async (userId) => {
     try {
@@ -36,34 +38,35 @@ const ListScreen = () => {
   };
 
   useEffect(() => {
-    getAdded('NStFWjztTjbeSivO95euaNBlrdO2')
-      .then((destinationsData) => {
-        setList(destinationsData);
-        setLoading(false);
+    getNonStop('SFO')
+      .then((data) => {
+        setNonstop(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
 
-  const groupDestinationsBySeason = (destinations) => {
-    console.log(destinations);
-    return destinations.reduce((result, destination) => {
-      destination.season.forEach((season) => {
-        if (!result[season]) {
-          result[season] = [];
-        }
-        result[season].push(destination);
+  useEffect(() => {
+    getAdded('NStFWjztTjbeSivO95euaNBlrdO2')
+      .then((destinationsData) => {
+        console.log(nonstop);
+        const updatedList = destinationsData.map((destination) => ({
+          ...destination,
+          nonstop: nonstop.includes(destination.iata),
+        }));
+        console.log(updatedList);
+        setList(updatedList);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-      return result;
-    }, {});
-  };
-
-  const destinationsBySeason = loading ? {} : groupDestinationsBySeason(list);
+  }, [nonstop]);
 
   return (
     <SafeAreaView className="flex-1 items-center dark:bg-slate-800">
-      <Text className="text-2xl dark:text-white">My BucketList</Text>
+      <Text className="text-2xl mb-2 dark:text-slate-50">My BucketList</Text>
       <ScrollView
       bounces={false}
       showsVerticalScrollIndicator={false}
@@ -71,15 +74,11 @@ const ListScreen = () => {
       {loading ? (
         <Text>List is loading...</Text>
       ) : (
-        Object.keys(destinationsBySeason).map((season) => (
-          <View key={season}>
-            <Text className="text-xl font-bold mb-2">{season}</Text>
-            {destinationsBySeason[season].map((destination) => (
-              <ListCard key={destination.id} destination={destination} />
-            ))}
-          </View>
+        list.map((destination) => (
+              <ListCard key={destination.id} destination={destination}/>
+            )
         ))
-      )}
+      }
       </ScrollView>
     </SafeAreaView>
   );

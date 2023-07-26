@@ -13,8 +13,8 @@ return (
             }}
     />
     <View className="w-full bg-opacity-80 p-4 absolute bottom-0 left-0 right-0">
-          <Text className="text-slate-50 font-bold mb-2">{destination.tag1}</Text>
-          <Text className="text-slate-50 font-bold mb-2">{destination.tag2}</Text>
+          <Text className="text-slate-50 text-lg font-bold mb-2">{destination.tag1}</Text>
+          <Text className="text-slate-50 text-lg font-bold mb-2">{destination.tag2}</Text>
     </View>
 
   </View>

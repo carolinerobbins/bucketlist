@@ -27,6 +27,7 @@ const Swipe = () => {
 
       const addedDestinations = userDoc.data().added || [];
       const skippedDestinations = userDoc.data().skipped || [];
+      const visitedDestinations = userDoc.data().visited || [];
 
       const destinationsRef = collection(db, "destinations");
       const querySnapshot = await getDocs(destinationsRef);
@@ -34,7 +35,8 @@ const Swipe = () => {
       const destinationsArray = [];
       querySnapshot.forEach((doc) => {
         const destinationData = doc.data();
-        if (!addedDestinations.includes(doc.id) && !skippedDestinations.includes(doc.id)) {
+        if (!addedDestinations.includes(doc.id) && !skippedDestinations.includes(doc.id) &&
+        !visitedDestinations.includes(doc.id)) {
           destinationsArray.push({
             id: doc.id,
             ...destinationData,
@@ -145,7 +147,7 @@ const Swipe = () => {
             backgroundColor={'#1b263b'}
             stackSize= {3}
             verticalSwipe={false}
-            stackSeparation={20}
+            stackSeparation={15}
       />
     <View className="flex-1 justify-end">
          <Ionicons

@@ -6,12 +6,10 @@ const router = require("./routes");
 const app = express();
 const port = process.env.PORT || 3001
 
-// Middleware
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json()); // Parse JSON request bodies
+app.use(cors());
+app.use(express.json());
 
-//Router
-app.use("/", router);
+app.use("/flights", router);
 
 // Start the server
 app.listen(port, () => {

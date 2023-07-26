@@ -11,6 +11,7 @@ npm-debug.*
 web-build/
 config.js
 firebaseConfig.js
+.env
 
 # macOS
 .DS_Store
