@@ -8,7 +8,6 @@ import SignUpScreen from './src/screens/SignUpScreen';
 import * as firebaseConfig from './firebaseConfig';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-
 const Stack = createStackNavigator();
 
 const App = () => {

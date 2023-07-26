@@ -1,7 +1,8 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Card = ({destination}) => {
+const Card = ({destination, handledVisited}) => {
 return (
   <View className="flex-1 justify-center items-center">
     <Text className="text-slate-50 font-bold text-xl">{destination.name}</Text>
@@ -15,6 +16,7 @@ return (
           <Text className="text-slate-50 font-bold mb-2">{destination.tag1}</Text>
           <Text className="text-slate-50 font-bold mb-2">{destination.tag2}</Text>
     </View>
+
   </View>
 )
 }

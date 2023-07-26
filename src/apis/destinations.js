@@ -1,8 +1,8 @@
 import { getFirestore, collection, getDocs, updateDoc, arrayUnion  } from "firebase/firestore";
-const db = getFirestore();
 
 export const getAllDestinations = async () => {
   try {
+    const db = getFirestore();
     const data = collection(db, "destinations");
     const results = await getDocs(data);
 
