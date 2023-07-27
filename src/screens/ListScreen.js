@@ -1,13 +1,18 @@
 import React, {useState, useEffect} from 'react'
-import { ScrollView, Text, View, SafeAreaView } from "react-native";
+import { ScrollView, Text, View, SafeAreaView, Switch } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import ListCard from '../features/ListCard';
 import {getNonStop} from '../apis/flights';
+import SelectDropdown from 'react-native-select-dropdown'
 
 const ListScreen = () => {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [nonstop, setNonstop] = useState([]);
+  const [nonstopOnly, setNonstopOnly] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedTripLength, setSelectedTripLength] = useState('');
 
   const getAdded = async (userId) => {
     try {
@@ -38,13 +43,13 @@ const ListScreen = () => {
   };
 
   useEffect(() => {
-    getNonStop('SFO')
-      .then((data) => {
-        setNonstop(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    // getNonStop('SFO')
+    //   .then((data) => {
+    //     setNonstop(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   }, []);
 
   useEffect(() => {
@@ -55,7 +60,6 @@ const ListScreen = () => {
           ...destination,
           nonstop: nonstop.includes(destination.iata),
         }));
-        console.log(updatedList);
         setList(updatedList);
         setLoading(false);
       })
@@ -64,9 +68,77 @@ const ListScreen = () => {
       });
   }, [nonstop]);
 
+  const filteredDestinations = list.filter((destination) => {
+    // Nonstop Filter
+    if (nonstopOnly && !destination.nonstop) {
+      return false;
+    }
+
+    // Season Filter
+    if (selectedSeason && !destination.season.includes(selectedSeason)) {
+      return false;
+    }
+
+    // Trip Length Filter
+    // if (selectedTripLength && destination.tripLength !== selectedTripLength) {
+    //   return false;
+    // }
+    return true;
+  });
+
   return (
     <SafeAreaView className="flex-1 items-center dark:bg-slate-800">
-      <Text className="text-2xl mb-2 dark:text-slate-50">My BucketList</Text>
+      <Text className="text-3xl font-bold first-line:mb-2 dark:text-slate-50">My BucketList</Text>
+      <View className="flex-row mb-2 items-center">
+        <Text className="mr-1 text-lg  dark:text-slate-50">Nonstop Flights Only:</Text>
+        <Switch value={nonstopOnly} onValueChange={(value) => setNonstopOnly(value)}/>
+      </View>
+
+      <Text className="text-lg  dark:text-slate-50"> Filter to narrow down your list: </Text>
+      <View className="flex-row items-center">
+        <SelectDropdown
+        buttonStyle={{flex: 1,
+          height: 30,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: '#444',
+          margin: 5}}
+         dropdownTextStyle={{ fontSize: 10 }}
+         onBlur={false}
+        data={['Spring','Summer','Fall','Winter']}
+        onSelect={(selectedItem, index) => {
+          setSelectedSeason(selectedItem);
+        }}
+        defaultButtonText={'Season'}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          return selectedItem;
+        }}
+        rowTextForSelection={(item, index) => {
+          return item;
+        }}
+      />
+      <SelectDropdown
+      buttonStyle={{flex: 1,
+        height: 30,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#444',
+        margin: 5}}
+         dropdownTextStyle={{ fontSize: 10 }}
+        data={['Weekend','Week','Two Weeks']}
+        onSelect={(selectedItem, index) => {
+          setSelectedTripLength(selectedItem);
+        }}
+        defaultButtonText={'Trip Length'}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          return selectedItem;
+        }}
+        rowTextForSelection={(item, index) => {
+          return item;
+        }}
+      />
+      </View>
+
       <ScrollView
       bounces={false}
       showsVerticalScrollIndicator={false}
@@ -74,7 +146,7 @@ const ListScreen = () => {
       {loading ? (
         <Text>List is loading...</Text>
       ) : (
-        list.map((destination) => (
+        filteredDestinations.map((destination) => (
               <ListCard key={destination.id} destination={destination}/>
             )
         ))
