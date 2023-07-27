@@ -7,6 +7,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import * as firebaseConfig from './firebaseConfig';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {UserContext, UserProvider} from './src/utils/UserContext'
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ const App = () => {
   }, [auth]);
 
   return (
+    <UserProvider>
     <NavigationContainer>
     <Stack.Navigator headerShown="false">
     { user ? (
@@ -33,6 +35,7 @@ const App = () => {
         )}
     </Stack.Navigator>
   </NavigationContainer>
+  </UserProvider>
   );
 };
 
