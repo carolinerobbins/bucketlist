@@ -12,7 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 const MapScreen = ({ navigation }) => {
   const [added, setAdded] = useState([]);
@@ -65,7 +65,7 @@ const MapScreen = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 justify-center  dark:bg-slate-800">
       <View className='items-center'>
-      <Text className="text-xl dark:text-slate-50">My BucketList</Text>
+      <Text className="text-3xl font-bold mb-2 dark:text-slate-50">My BucketList</Text>
       <Text className="text-md dark:text-slate-50">Green: I've been here! </Text>
       <Text className="text-md dark:text-slate-50">Blue: I want to go here!</Text>
       </View>
@@ -77,6 +77,7 @@ const MapScreen = ({ navigation }) => {
           latitudeDelta: 180,
           longitudeDelta: 180,
         }}
+        provider={PROVIDER_GOOGLE}
       >
         {added.map((destination) => (
           <Marker

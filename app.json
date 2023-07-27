@@ -15,7 +15,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.reactjs.native.example.bucketlist",
+      "config": {
+        "googleMapsApikey": "AIzaSyAQugpOPxV_g1klr0Wt6dyDA23JUfKzjWg"
+      }
     },
     "android": {
       "adaptiveIcon": {
