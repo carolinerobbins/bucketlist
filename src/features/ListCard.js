@@ -11,6 +11,7 @@ const ListCard = ({ destination }) => {
         <Text className="text-lg font-bold text-black">{destination.name}</Text>
         {destination.nonstop ? <Text className="text-md text-black">Nonstop Available </Text> : <Text className="text-md text-black">Connection Required</Text>}
         <Text className="text-md text-black">Cheapest Price: {destination.cost} | {destination.dates}</Text>
+        <Text className="text-md text-black">Flight Time: {destination.duration}</Text>
       </View>
     </View>
   );

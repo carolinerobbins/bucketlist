@@ -15,8 +15,10 @@ const ProfileScreen = ({ navigation }) => {
   }
   return (
     <SafeAreaView className="flex-1 items-center dark:bg-slate-800">
+      <View className="flex-row mb-2 items-center">
       <Text className="text-lg dark:text-slate-50">Toggle Dark Mode: </Text>
       <Switch value={colorScheme === "dark"} onChange={toggleColorScheme} />
+      </View>
       <Text className="text-lg dark:text-slate-50"> This is your profile screen. </Text>
       <Button title='Sign Out' onPress={() => handleSignOut()} />
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
