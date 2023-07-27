@@ -12,7 +12,7 @@ web-build/
 config.js
 firebaseConfig.js
 .env
-
+app.json
 # macOS
 .DS_Store
 
