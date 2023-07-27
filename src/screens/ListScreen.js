@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import { ScrollView, Text, View, SafeAreaView, Switch } from "react-native";
 import {Picker} from '@react-native-picker/picker';
 import { getFirestore, collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import ListCard from '../features/ListCard';
 import {getNonStop} from '../apis/flights';
-import SelectDropdown from 'react-native-select-dropdown'
+import SelectDropdown from 'react-native-select-dropdown';
+import { UserContext } from '../utils/UserContext'
 
 const ListScreen = () => {
   const [list, setList] = useState([]);
@@ -13,14 +14,13 @@ const ListScreen = () => {
   const [nonstopOnly, setNonstopOnly] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState('');
   const [selectedTripLength, setSelectedTripLength] = useState('');
+  const user = useContext(UserContext);
 
   const getAdded = async (userId) => {
     try {
       const db = getFirestore();
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
 
-      const addedDestinations = userDoc.data().added || [];
+      const addedDestinations = user.user.added;
 
       const destinationsRef = collection(db, "destinations");
       const querySnapshot = await getDocs(destinationsRef);
@@ -43,7 +43,7 @@ const ListScreen = () => {
   };
 
   useEffect(() => {
-    // getNonStop('SFO')
+    // getNonStop(user.user.iata)
     //   .then((data) => {
     //     setNonstop(data);
     //   })
@@ -53,9 +53,8 @@ const ListScreen = () => {
   }, []);
 
   useEffect(() => {
-    getAdded('NStFWjztTjbeSivO95euaNBlrdO2')
+    getAdded(user.user.uid)
       .then((destinationsData) => {
-        console.log(nonstop);
         const updatedList = destinationsData.map((destination) => ({
           ...destination,
           nonstop: nonstop.includes(destination.iata),
@@ -88,8 +87,8 @@ const ListScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 items-center dark:bg-slate-800">
-      <Text className="text-3xl font-bold first-line:mb-2 dark:text-slate-50">My BucketList</Text>
-      <View className="flex-row mb-2 items-center">
+      <Text className="text-3xl font-bold m-4 dark:text-slate-50">My BucketList</Text>
+      <View className="flex-row items-center">
         <Text className="mr-1 text-lg  dark:text-slate-50">Nonstop Flights Only:</Text>
         <Switch value={nonstopOnly} onValueChange={(value) => setNonstopOnly(value)}/>
       </View>

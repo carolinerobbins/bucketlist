@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { SafeAreaView, Text, View, StatusBar } from "react-native";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  arrayUnion,
-  updateDoc,
-  setDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import {getFirestore,collection,getDocs,getDoc,doc,arrayUnion,updateDoc,setDoc,query,where} from "firebase/firestore";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { UserContext } from '../utils/UserContext'
+
 
 const MapScreen = ({ navigation }) => {
   const [added, setAdded] = useState([]);
   const [visited, setVisited] = useState([]);
-  const db = getFirestore();
+  const user = useContext(UserContext);
 
   const getMarkers = async (userId) => {
     try {
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
-
-      const addedDestinations = userDoc.data().added || [];
-      const visitedDestinations = userDoc.data().visited || [];
+      const db = getFirestore();
+      const addedDestinations = user.user.added;
+      const visitedDestinations = user.user.visited;
 
       const destinationsRef = collection(db, "destinations");
 
@@ -52,7 +41,7 @@ const MapScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getMarkers("NStFWjztTjbeSivO95euaNBlrdO2")
+    getMarkers(user.user.uid)
       .then((data) => {
         setAdded(data[0]);
         setVisited(data[1]);
@@ -65,7 +54,7 @@ const MapScreen = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 justify-center  dark:bg-slate-800">
       <View className='items-center'>
-      <Text className="text-3xl font-bold mb-2 dark:text-slate-50">My BucketList</Text>
+      <Text className="text-3xl font-bold m-4 dark:text-slate-50">My BucketList</Text>
       <Text className="text-md dark:text-slate-50">Green: I've been here! </Text>
       <Text className="text-md dark:text-slate-50">Blue: I want to go here!</Text>
       </View>
