@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const getNonStop = async (departure) => {
   try {
+    console.log('test');
     const response = await axios.get('http://localhost:3001/flights/nonstop', {
       params: {
         departure,

@@ -2,10 +2,9 @@ import React, { createContext, useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
-// Create a user context
 export const UserContext = createContext();
 
-// Create a user provider
+
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const auth = getAuth();
@@ -36,7 +35,7 @@ export const UserProvider = ({ children }) => {
   }, [auth]);
 
   return (
-    <UserContext.Provider value={{ user, getUser }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

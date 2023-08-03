@@ -14,28 +14,31 @@ import { UserContext } from '../utils/UserContext'
 
 const ProfileScreen = ({ navigation }) => {
   const { colorScheme, toggleColorScheme } = useColorScheme();
-  const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     const auth = getAuth();
-    signOut(auth)
-      .then(() => {})
-      .catch((err) => {
-        console.error(err);
-      });
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleEmailChange = (email) => {
     updateEmail(auth.currentUser, "user@example.com")
       .then(() => {
-        // Email updated!
-        // ...
+        //change email
       })
       .catch((error) => {
-        // An error occurred
-        // ...
+        //catch errors
       });
   };
+
+  useEffect(() => {
+    console.log(user)
+  },[]);
 
   return (
     <SafeAreaView className="flex-1 dark:bg-slate-800">
@@ -53,13 +56,13 @@ const ProfileScreen = ({ navigation }) => {
       {user && (
         <View className="mb-2 ml-2">
           <Text className="text-lg dark:text-slate-50">
-            Name: {user.user.first} {user.user.last}
+            Name: {user.first} {user.last}
           </Text>
           <Text className="text-lg dark:text-slate-50">
-            Email: {user.user.email}
+            Email: {user.email}
           </Text>
           <Text className="text-lg dark:text-slate-50">
-            Home Airport: {user.user.iata}
+            Home Airport: {user.iata}
           </Text>
         </View>
       )}

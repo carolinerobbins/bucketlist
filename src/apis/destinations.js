@@ -14,7 +14,6 @@ export const getAllDestinations = async () => {
         ...destinationData,
       });
     });
-    console.log(destinationsArray);
     return destinationsArray;
   } catch (error) {
     console.error("Error fetching destinations:", error);

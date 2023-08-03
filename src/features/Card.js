@@ -7,7 +7,7 @@ return (
   <View className="flex-1 justify-center items-center">
     <Text className="text-slate-50 font-bold text-xl">{destination.name}</Text>
     <Image
-            style={{ width: "100%", height: 500, borderRadius: 10 }}
+            style={{ width: "100%", height: 650, borderRadius: 10 }}
             source={{
               uri: destination.image
             }}

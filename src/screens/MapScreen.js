@@ -8,13 +8,15 @@ import { UserContext } from '../utils/UserContext'
 const MapScreen = ({ navigation }) => {
   const [added, setAdded] = useState([]);
   const [visited, setVisited] = useState([]);
-  const user = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
+  const {user} = useContext(UserContext);
 
   const getMarkers = async (userId) => {
     try {
       const db = getFirestore();
-      const addedDestinations = user.user.added;
-      const visitedDestinations = user.user.visited;
+      const addedDestinations = user.added;
+      console.log("added", addedDestinations);
+      const visitedDestinations = user.visited;
 
       const destinationsRef = collection(db, "destinations");
 
@@ -41,10 +43,11 @@ const MapScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getMarkers(user.user.uid)
+    getMarkers(user.uid)
       .then((data) => {
         setAdded(data[0]);
         setVisited(data[1]);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -53,6 +56,8 @@ const MapScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView className="flex-1 justify-center  dark:bg-slate-800">
+      {!loading ?
+      <>
       <View className='items-center'>
       <Text className="text-3xl font-bold m-4 dark:text-slate-50">My BucketList</Text>
       <Text className="text-md dark:text-slate-50">Green: I've been here! </Text>
@@ -89,6 +94,8 @@ const MapScreen = ({ navigation }) => {
           />
         ))}
       </MapView>
+      </>
+    : <Text></Text>}
     </SafeAreaView>
   );
 };

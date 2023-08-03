@@ -14,13 +14,12 @@ const ListScreen = () => {
   const [nonstopOnly, setNonstopOnly] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState('');
   const [selectedTripLength, setSelectedTripLength] = useState('');
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
 
   const getAdded = async (userId) => {
     try {
       const db = getFirestore();
-
-      const addedDestinations = user.user.added;
+      const addedDestinations = user.added;
 
       const destinationsRef = collection(db, "destinations");
       const querySnapshot = await getDocs(destinationsRef);
@@ -43,17 +42,17 @@ const ListScreen = () => {
   };
 
   useEffect(() => {
-    // getNonStop(user.user.iata)
-    //   .then((data) => {
-    //     setNonstop(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+    getNonStop(user.iata)
+      .then((data) => {
+        setNonstop(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   useEffect(() => {
-    getAdded(user.user.uid)
+    getAdded(user.uid)
       .then((destinationsData) => {
         const updatedList = destinationsData.map((destination) => ({
           ...destination,
@@ -65,23 +64,21 @@ const ListScreen = () => {
       .catch((error) => {
         console.error('Error:', error);
       });
-  }, [nonstop]);
+  }, [nonstop, user]);
 
   const filteredDestinations = list.filter((destination) => {
-    // Nonstop Filter
+    console.log("destination.tripLength:", destination.tripLength);
+  console.log("selectedTripLength:", selectedTripLength);
+
     if (nonstopOnly && !destination.nonstop) {
       return false;
     }
-
-    // Season Filter
     if (selectedSeason && !destination.season.includes(selectedSeason)) {
       return false;
     }
-
-    // Trip Length Filter
-    // if (selectedTripLength && destination.tripLength !== selectedTripLength) {
-    //   return false;
-    // }
+    if (selectedTripLength && !destination.tripLength.includes(selectedTripLength)) {
+      return false;
+    }
     return true;
   });
 
@@ -102,8 +99,8 @@ const ListScreen = () => {
           borderWidth: 1,
           borderColor: '#444',
           margin: 5}}
-         dropdownTextStyle={{ fontSize: 10 }}
-         onBlur={false}
+        dropdownTextStyle={{ fontSize: 10 }}
+        onBlur={false}
         data={['Spring','Summer','Fall','Winter']}
         onSelect={(selectedItem, index) => {
           setSelectedSeason(selectedItem);
@@ -123,7 +120,7 @@ const ListScreen = () => {
         borderWidth: 1,
         borderColor: '#444',
         margin: 5}}
-         dropdownTextStyle={{ fontSize: 10 }}
+        dropdownTextStyle={{ fontSize: 10 }}
         data={['Weekend','Week','Two Weeks']}
         onSelect={(selectedItem, index) => {
           setSelectedTripLength(selectedItem);

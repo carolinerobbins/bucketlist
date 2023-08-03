@@ -1,24 +1,20 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import Swiper from "react-native-deck-swiper";
 import Card from './Card';
 import { Text, View } from 'react-native'
 import { getFirestore, collection, getDocs, getDoc, doc, arrayUnion, updateDoc, setDoc, query, where } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { UserContext } from '../utils/UserContext'
 
 const Swipe = () => {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const swipeRef = useRef();
   const db = getFirestore();
   const auth = getAuth();
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-  }, [auth]);
 
   const getAllDestinations = async (userId) => {
     try {
@@ -67,7 +63,6 @@ const Swipe = () => {
       const db = getFirestore();
       const userRef = doc(db, "users", user.uid);
 
-      // Get the user document
       const userDoc = await getDoc(userRef);
       if (userDoc.exists()) {
         if (userDoc.data().added) {
@@ -78,6 +73,10 @@ const Swipe = () => {
           await setDoc(userRef, { added: [destinationId] }, { merge: true });
         }
       }
+      setUser((prevUser) => ({
+        ...prevUser,
+        added: [...prevUser.added, destinationId],
+      }));
       console.log("Destination added to the user's 'added' array successfully!");
     } catch (error) {
       console.error("Error adding destination to user's 'added' array:", error);
@@ -100,6 +99,10 @@ const Swipe = () => {
           await setDoc(userRef, { skipped: [destinationId] }, { merge: true });
         }
       }
+      setUser((prevUser) => ({
+        ...prevUser,
+        skipped: [...prevUser.skipped, destinationId], // Make sure to update the 'skipped' property with the new value
+      }));
       console.log("Destination added to the user's 'added' array successfully!");
     } catch (error) {
       console.error("Error adding destination to user's 'added' array:", error);
@@ -122,6 +125,10 @@ const Swipe = () => {
           await setDoc(userRef, { visited: [destinationId] }, { merge: true });
         }
       }
+      setUser((prevUser) => ({
+        ...prevUser,
+        visited: [...prevUser.visited, destinationId], // Make sure to update the 'visited' property with the new value
+      }));
       console.log("Destination added to the user's 'added' array successfully!");
     } catch (error) {
       console.error("Error adding destination to user's 'added' array:", error);

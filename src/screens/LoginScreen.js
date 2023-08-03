@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, TextInput, Button, Text} from 'react-native';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { UserContext } from '../utils/UserContext'
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const {user, setUser} = useContext(UserContext)
   const auth = getAuth();
 
   const handleLoginPress = () => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
+      setUser(user);
     })
     .catch((err) => console.error(err));
   }
